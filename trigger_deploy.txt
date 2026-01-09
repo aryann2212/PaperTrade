@@ -1,0 +1,2 @@
+This file exists to force a new git commit and trigger a fresh deployment on Render.
+Timestamp: 2026-01-09
