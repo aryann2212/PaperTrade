@@ -78,9 +78,10 @@ app.post('/api/login', async (req, res) => {
 // Market Data Loop
 async function fetchPrice() {
     try {
-        // Switch to CoinCap because Binance blocks US IPs (Error 451)
-        const response = await axios.get('https://api.coincap.io/v2/assets/bitcoin');
-        const price = parseFloat(response.data.data.priceUsd);
+        // Switch to CoinBase (US-Friendly, Faster than CoinGecko)
+        const response = await axios.get('https://api.coinbase.com/v2/prices/BTC-USD/spot');
+        const price = parseFloat(response.data.data.amount);
+        // console.log(`BTC Price Log: $${price}`); // Reduced logging
         currentPrice = price;
         return price;
     } catch (error) {
@@ -115,7 +116,8 @@ async function updateMarket() {
     });
 }
 
-setInterval(updateMarket, 1000);
+// Update market every 2 seconds (CoinBase allows faster polling)
+setInterval(updateMarket, 2000);
 
 // Socket Logic
 io.on('connection', (socket) => {
