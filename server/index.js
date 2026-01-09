@@ -64,82 +64,23 @@ app.post('/api/login', async (req, res) => {
         if (user && user.password === password) {
             res.json({ success: true, user: { username: user.username, name: user.name, role: user.role } });
         } else {
+            console.warn(`Login failed for ${username}: Invalid password or user not found`);
             res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
     } catch (err) {
+        console.error('LOGIN ERROR:', err); // Log the specific error
         res.status(500).json({ success: false, error: err.message });
     }
 });
 
-// Admin: Create User
-app.post('/api/admin/create-user', async (req, res) => {
-    const { username, name, password, initialBalance } = req.body;
-
-    try {
-        const existing = await User.findOne({ username });
-        if (existing) {
-            return res.status(400).json({ success: false, message: 'User already exists' });
-        }
-
-        const newUser = await User.create({
-            username,
-            name: name || username,
-            password,
-            role: 'USER',
-            balance: parseFloat(initialBalance) || 1000,
-            holdings: { 'BTC': 0 },
-            avgBuyPrice: 0,
-            logs: []
-        });
-
-        console.log(`Created user: ${username} (${newUser.name})`);
-        res.json({ success: true, user: newUser });
-    } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
-    }
-});
-
-// Admin: Get All Users
-app.get('/api/admin/users', async (req, res) => {
-    try {
-        // Return list without passwords
-        const users = await User.find({});
-        const userList = users.map(u => ({
-            username: u.username,
-            name: u.name,
-            role: u.role,
-            balance: u.balance,
-            holdings: u.holdings,
-            logs: u.logs,
-            equity: u.balance + (u.holdings.BTC || 0) * currentPrice
-        }));
-        res.json(userList);
-    } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
-    }
-});
-
-// Admin: Update Balance
-app.post('/api/admin/update-balance', async (req, res) => {
-    const { username, amount } = req.body;
-    try {
-        const user = await User.findOne({ username });
-        if (!user) return res.status(404).json({ success: false });
-
-        user.balance += parseFloat(amount);
-        await user.save();
-        res.json({ success: true, newBalance: user.balance });
-    } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
-    }
-});
-
+// ... (skipping to fetchPrice)
 
 // Market Data Loop
 async function fetchPrice() {
     try {
-        const response = await axios.get('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
-        const price = parseFloat(response.data.price);
+        // Switch to CoinCap because Binance blocks US IPs (Error 451)
+        const response = await axios.get('https://api.coincap.io/v2/assets/bitcoin');
+        const price = parseFloat(response.data.data.priceUsd);
         currentPrice = price;
         return price;
     } catch (error) {
