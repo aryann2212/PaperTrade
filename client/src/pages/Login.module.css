@@ -1,0 +1,73 @@
+.container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at top, #1a1c23 0%, #000000 100%);
+}
+
+.loginBox {
+    padding: 3rem;
+    width: 400px;
+    background: rgba(13, 14, 18, 0.8);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+}
+
+.loginBox h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    background: linear-gradient(45deg, var(--accent-primary), #64ffda);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.formGroup {
+    margin-bottom: 1.5rem;
+}
+
+.formGroup label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.formGroup input {
+    width: 100%;
+    padding: 0.8rem;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--glass-border);
+    color: white;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.formGroup input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+}
+
+.error {
+    color: var(--accent-danger);
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.submitBtn {
+    width: 100%;
+    padding: 1rem;
+    background: var(--accent-primary);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.submitBtn:hover {
+    background: #6D28D9;
+}

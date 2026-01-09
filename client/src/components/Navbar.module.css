@@ -1,0 +1,140 @@
+/* Navbar.module.css */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: rgba(13, 14, 18, 0.8);
+    /* Semi-transparent background */
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--glass-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 900;
+    letter-spacing: -1px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-primary);
+}
+
+.reqBadge {
+    background: linear-gradient(135deg, var(--accent-primary), #a855f7);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    color: white;
+    letter-spacing: 1px;
+}
+
+.portfolioInfo {
+    display: flex;
+    gap: 3rem;
+    align-items: center;
+}
+
+.balanceItem {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.2rem;
+}
+
+.equityValue {
+    font-size: 1.2rem;
+    font-weight: 800;
+    font-family: monospace;
+    color: var(--text-primary);
+}
+
+.pnlValue {
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: monospace;
+}
+
+.cashValue {
+    font-size: 1.3rem;
+    /* Bigger */
+    font-weight: 800;
+    font-family: monospace;
+    color: #4ade80;
+    /* Bright Green */
+    text-shadow: 0 0 10px rgba(74, 222, 128, 0.4);
+    /* Glow */
+}
+
+.profit {
+    color: var(--accent-success);
+}
+
+.loss {
+    color: var(--accent-danger);
+}
+
+
+.actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.depositBtn {
+    background: var(--accent-primary);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--border-radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+}
+
+.depositBtn:hover {
+    background: #6D28D9;
+    transform: translateY(-1px);
+}
+
+.userSection {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-right: 1rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    padding-right: 1rem;
+}
+
+.username {
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.logoutBtn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-tertiary);
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.logoutBtn:hover {
+    color: white;
+    border-color: white;
+}

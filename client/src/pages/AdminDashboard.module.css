@@ -1,0 +1,271 @@
+.container {
+    min-height: 100vh;
+    background: #0D0E12;
+    color: white;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    background: linear-gradient(to right, #ffffff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.userInfo {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.logoutBtn {
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.logoutBtn:hover {
+    background: rgba(239, 68, 68, 0.3);
+}
+
+.content {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.card {
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.card h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 0.5rem;
+}
+
+/* Create User Form */
+.createForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.formRow {
+    display: flex;
+    gap: 1rem;
+}
+
+.createForm input {
+    padding: 0.8rem;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--glass-border);
+    color: white;
+    border-radius: 4px;
+    flex: 1;
+}
+
+.btnPrimary {
+    padding: 0.8rem 1.5rem;
+    background: var(--accent-primary);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+/* Table */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th {
+    text-align: left;
+    padding: 1rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+}
+
+.nameCell {
+    font-weight: 600;
+    color: white;
+}
+
+.tagAdmin {
+    color: #ffd700;
+    font-weight: bold;
+    font-size: 0.8rem;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.tagUser {
+    color: #3b82f6;
+    font-size: 0.8rem;
+    background: rgba(59, 130, 246, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.actionGroup {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.actionBtn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: var(--text-secondary);
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: 0.2s;
+}
+
+.actionBtn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.actionBtnInfo {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    color: #60a5fa;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: 0.2s;
+}
+
+.actionBtnInfo:hover {
+    background: rgba(59, 130, 246, 0.2);
+}
+
+
+/* Modal */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.modalContent {
+    background: #1a1c23;
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    width: 800px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.modalHeader {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modalHeader h3 {
+    margin: 0;
+    color: white;
+}
+
+.closeBtn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.modalBody {
+    padding: 1.5rem;
+    overflow-y: auto;
+}
+
+.logsTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.logsTable th {
+    text-align: left;
+    padding: 0.5rem;
+    color: var(--text-tertiary);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logsTable td {
+    padding: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+}
+
+.tagBuy {
+    color: var(--accent-success);
+    font-weight: bold;
+}
+
+.tagSell {
+    color: var(--accent-danger);
+    font-weight: bold;
+}
+
+.profit {
+    color: var(--accent-success);
+}
+
+.loss {
+    color: var(--accent-danger);
+}
+
+.emptyLogs {
+    text-align: center;
+    color: var(--text-tertiary);
+    padding: 2rem;
+}
