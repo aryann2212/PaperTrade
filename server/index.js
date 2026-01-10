@@ -104,17 +104,46 @@ app.post('/api/admin/create-user', async (req, res) => {
 // Admin: Get All Users
 app.get('/api/admin/users', async (req, res) => {
     try {
-        // Return list without passwords
         const users = await User.find({});
-        const userList = users.map(u => ({
-            username: u.username,
-            name: u.name,
-            role: u.role,
-            balance: u.balance,
-            holdings: u.holdings,
-            logs: u.logs,
-            equity: u.balance + (u.holdings.BTC || 0) * currentPrice
-        }));
+
+        // Calculate YTD Timestamp (Jan 1st of current year)
+        const currentYear = new Date().getFullYear();
+        const startOfYear = new Date(currentYear, 0, 1).getTime();
+
+        const userList = users.map(u => {
+            // 1. Calculate Unrealized PnL
+            const btcHoldings = u.holdings.BTC || 0;
+            const avgPrice = u.avgBuyPrice || 0;
+            const costBasis = btcHoldings * avgPrice;
+            const marketValue = btcHoldings * currentPrice;
+            const rawPnL = marketValue - costBasis;
+            const unrealizedPnL = rawPnL * LEVERAGE;
+
+            // 2. Calculate Realized PnL (YTD)
+            let realizedPnL = 0;
+            if (u.logs && u.logs.length > 0) {
+                realizedPnL = u.logs.reduce((acc, log) => {
+                    const logTime = new Date(log.timestamp).getTime();
+                    // Only sum PnL from this year
+                    if (log.pnl && logTime >= startOfYear) {
+                        return acc + log.pnl;
+                    }
+                    return acc;
+                }, 0);
+            }
+
+            return {
+                username: u.username,
+                name: u.name,
+                role: u.role,
+                balance: u.balance,
+                holdings: u.holdings,
+                logs: u.logs,
+                equity: u.balance + (marketValue), // Total Equity (Cash + BTC Value) approx
+                unrealizedPnL: unrealizedPnL,
+                realizedPnL: realizedPnL
+            };
+        });
         res.json(userList);
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
@@ -123,16 +152,75 @@ app.get('/api/admin/users', async (req, res) => {
 
 // Admin: Update Balance
 app.post('/api/admin/update-balance', async (req, res) => {
-    const { username, amount } = req.body;
     try {
+        const { username, amount, logTransaction } = req.body;
         const user = await User.findOne({ username });
-        if (!user) return res.status(404).json({ success: false });
+        if (!user) return res.status(404).json({ error: 'User not found' });
 
-        user.balance += parseFloat(amount);
+        const oldBalance = user.balance;
+        user.balance = parseFloat(amount);
+
+        if (logTransaction) {
+            const diff = user.balance - oldBalance;
+            const type = diff >= 0 ? 'DEPOSIT' : 'WITHDRAW';
+
+            user.logs.push({
+                type: type,
+                price: 0, // N/A for cash adjustments
+                amountUSD: Math.abs(diff),
+                amountBTC: 0,
+                balanceAfter: user.balance,
+                pnl: 0,
+                timestamp: new Date()
+            });
+        }
+
         await user.save();
-        res.json({ success: true, newBalance: user.balance });
+        res.json({ success: true, balance: user.balance });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        console.error(err);
+        res.status(500).json({ error: 'Failed to update balance' });
+    }
+});
+
+// Admin: Update User Details
+app.post('/api/admin/update-user', async (req, res) => {
+    try {
+        const { username, newName, newPassword } = req.body;
+        const user = await User.findOne({ username });
+        if (!user) return res.status(404).json({ error: 'User not found' });
+
+        if (newName !== undefined) user.name = newName;
+
+        // In a real app, hash this password!
+        if (newPassword && newPassword.trim() !== '') {
+            user.password = newPassword;
+        }
+
+        await user.save();
+        res.json({ success: true, user: { username: user.username, name: user.name } });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to update user' });
+    }
+});
+
+// Admin: Delete User
+app.post('/api/admin/delete-user', async (req, res) => {
+    try {
+        const { username } = req.body;
+        // Prevent deleting admin
+        if (username === 'admin') {
+            return res.status(403).json({ error: 'Cannot delete the main admin account' });
+        }
+
+        const deleted = await User.findOneAndDelete({ username });
+        if (!deleted) return res.status(404).json({ error: 'User not found' });
+
+        res.json({ success: true, message: `User ${username} deleted` });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to delete user' });
     }
 });
 

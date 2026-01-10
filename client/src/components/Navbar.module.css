@@ -58,32 +58,36 @@
     font-size: 1.2rem;
     font-weight: 800;
     font-family: monospace;
-    color: var(--text-primary);
+    color: #60a5fa;
+    /* Blueish */
+    text-shadow: 0 0 10px rgba(96, 165, 250, 0.4);
 }
 
 .pnlValue {
-    font-size: 1rem;
+    font-size: 1.1rem;
+    /* Slightly larger */
     font-weight: 700;
     font-family: monospace;
 }
 
 .cashValue {
     font-size: 1.3rem;
-    /* Bigger */
     font-weight: 800;
     font-family: monospace;
     color: #4ade80;
     /* Bright Green */
-    text-shadow: 0 0 10px rgba(74, 222, 128, 0.4);
-    /* Glow */
+    text-shadow: 0 0 15px rgba(74, 222, 128, 0.6);
+    /* Stronger Glow */
 }
 
 .profit {
-    color: var(--accent-success);
+    color: #4ade80;
+    text-shadow: 0 0 10px rgba(74, 222, 128, 0.4);
 }
 
 .loss {
-    color: var(--accent-danger);
+    color: #f87171;
+    text-shadow: 0 0 10px rgba(248, 113, 113, 0.4);
 }
 
 

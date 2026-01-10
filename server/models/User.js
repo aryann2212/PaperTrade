@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const tradeLogSchema = new mongoose.Schema({
-    type: { type: String, enum: ['BUY', 'SELL'] },
+    type: { type: String, enum: ['BUY', 'SELL', 'DEPOSIT', 'WITHDRAW'] },
     price: Number,
     amountUSD: Number,
     amountBTC: Number,

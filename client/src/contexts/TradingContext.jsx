@@ -21,13 +21,30 @@ export const TradingProvider = ({ children }) => {
     });
     const [leverage, setLeverage] = useState(500);
 
+    // Restore Session
+    useEffect(() => {
+        const storedUser = localStorage.getItem('userSession');
+        if (storedUser) {
+            try {
+                const parsed = JSON.parse(storedUser);
+                setUser(parsed);
+                connectSocket(parsed.username);
+            } catch (e) {
+                console.error("Failed to parse stored session", e);
+                localStorage.removeItem('userSession');
+            }
+        }
+    }, []); // Run only once on mount
+
     const login = async (username, password) => {
         try {
             const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3001';
             const res = await axios.post(`${apiBase}/api/login`, { username, password });
             if (res.data.success) {
-                setUser(res.data.user);
-                connectSocket(res.data.user.username);
+                const userData = res.data.user;
+                setUser(userData);
+                localStorage.setItem('userSession', JSON.stringify(userData)); // Persist
+                connectSocket(userData.username);
                 return true;
             }
         } catch (err) {
@@ -39,6 +56,7 @@ export const TradingProvider = ({ children }) => {
     const logout = () => {
         if (socket) socket.disconnect();
         setUser(null);
+        localStorage.removeItem('userSession'); // Clear
         setPortfolio({ balance: 0, holdings: { 'BTC': 0 }, logs: [] });
     };
 

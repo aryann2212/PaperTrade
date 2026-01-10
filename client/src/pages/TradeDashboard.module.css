@@ -5,6 +5,53 @@
     /* Check this */
 }
 
+/* Toast Notification */
+.toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    z-index: 1000;
+    animation: fadeInOut 1s ease-in-out forwards;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.toastSuccess {
+    background: rgba(34, 197, 94, 0.9);
+    border: 1px solid #22c55e;
+}
+
+.toastError {
+    background: rgba(239, 68, 68, 0.9);
+    border: 1px solid #ef4444;
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -10px);
+    }
+
+    15% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+
+    85% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -10px);
+    }
+}
+
 .mainContent {
     display: flex;
     flex-direction: column;
@@ -146,6 +193,84 @@
     flex: 1;
     overflow-y: auto;
     padding: 1rem;
+}
+
+.btn {
+    flex: 1;
+    /* Equal split */
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s;
+    text-transform: uppercase;
+}
+
+.btnMax {
+    flex: 1;
+    /* Equal split */
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    color: #cbd5e1;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.panelHeader {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tab {
+    flex: 1;
+    padding: 15px;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-bottom: 2px solid transparent;
+}
+
+.tab:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.tabActiveBuy {
+    color: #22c55e;
+    border-bottom: 2px solid #22c55e;
+    background: rgba(34, 197, 94, 0.05);
+}
+
+.tabActiveSell {
+    color: #ef4444;
+    border-bottom: 2px solid #ef4444;
+    background: rgba(239, 68, 68, 0.05);
+}
+
+.panelContent {
+    padding: 20px;
+}
+
+.inputGroup {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
 .logItem {
