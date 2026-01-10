@@ -19,7 +19,7 @@ export const TradingProvider = ({ children }) => {
         avgBuyPrice: 0,
         logs: []
     });
-    const [leverage, setLeverage] = useState(500);
+    const [leverage, setLeverage] = useState(1000);
 
     // Restore Session
     useEffect(() => {

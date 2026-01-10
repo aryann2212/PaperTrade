@@ -28,10 +28,32 @@ const Navbar = () => {
 
             <div className={styles.portfolioInfo}>
 
-                {/* BTC Holdings */}
-                <div className={styles.balanceItem}>
-                    <span className={styles.label}>BTC Holdings</span>
-                    <span className={styles.equityValue}>{(portfolio?.holdings?.BTC || 0).toFixed(4)} BTC</span>
+                {/* Content: Available Balance (formerly Cash) */}
+                <div className={styles.navItem}>
+                    <span className={styles.label}>Available Balance</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span className={styles.cashValue}>${portfolio.balance?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        <button
+                            onClick={() => alert("Please ask the Admin to deposit funds.")}
+                            style={{
+                                background: '#4ade80',
+                                color: '#000',
+                                border: 'none',
+                                borderRadius: '50%',
+                                width: '24px',
+                                height: '24px',
+                                fontSize: '18px',
+                                fontWeight: 'bold',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                            title="Deposit Funds"
+                        >
+                            +
+                        </button>
+                    </div>
                 </div>
 
                 {/* P&L */}
@@ -42,10 +64,10 @@ const Navbar = () => {
                     </span>
                 </div>
 
-                {/* Content: Available Balance (formerly Cash) */}
+                {/* BTC Holdings */}
                 <div className={styles.balanceItem}>
-                    <span className={styles.label}>Available Balance</span>
-                    <span className={styles.cashValue}>${formatMoney(cash)}</span>
+                    <span className={styles.label}>BTC Holdings</span>
+                    <span className={styles.equityValue}>{(portfolio?.holdings?.BTC || 0).toFixed(4)} BTC</span>
                 </div>
 
             </div>

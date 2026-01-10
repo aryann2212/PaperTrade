@@ -20,7 +20,7 @@ const io = new Server(server, {
     }
 });
 
-const LEVERAGE = 500;
+const LEVERAGE = 1000;
 
 // Connect to MongoDB
 // Connect to MongoDB

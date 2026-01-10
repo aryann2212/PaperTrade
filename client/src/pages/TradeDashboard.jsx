@@ -194,7 +194,7 @@ const TradeDashboard = () => {
             <div className={styles.mainContent}>
                 <header className={styles.header}>
                     <div>
-                        <h2>BTC/USD (500x)</h2>
+                        <h2>BTC/USD (1000x)</h2>
                         <div className={styles.priceDisplay}>
                             ${hyperPrice ? hyperPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '---'}
                         </div>
@@ -202,7 +202,7 @@ const TradeDashboard = () => {
 
                     <div className={styles.headerActions}>
                         <div className={`${styles.leverageBadge} glass-panel`}>
-                            500x LEVERAGE
+                            1000x LEVERAGE
                         </div>
                         <button
                             className={styles.historyBtn}
