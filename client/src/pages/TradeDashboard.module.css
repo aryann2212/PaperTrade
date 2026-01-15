@@ -400,3 +400,38 @@
     color: var(--text-secondary);
     margin-top: 0.5rem;
 }
+
+/* Full Screen Chart Modifier */
+.fullScreenChart {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2000;
+    background: #0D0E12;
+    /* Ensure background matches theme */
+    padding: 2rem;
+    border-radius: 0;
+}
+
+.exitFullScreenBtn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 2001;
+    /* Above chart */
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.exitFullScreenBtn:hover {
+    background: rgba(239, 68, 68, 0.3);
+    border-color: #ef4444;
+}

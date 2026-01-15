@@ -269,40 +269,68 @@ async function updateMarket() {
 // Update market every 2 seconds (CoinBase allows faster polling)
 setInterval(updateMarket, 2000);
 
+// Register
+app.post('/api/register', async (req, res) => {
+    const { name, username, password } = req.body;
+    try {
+        if (!username || !password) {
+            return res.status(400).json({ success: false, message: 'Username and password required' });
+        }
+
+        const existing = await User.findOne({ username });
+        if (existing) {
+            return res.status(400).json({ success: false, message: 'Username already taken' });
+        }
+
+        const newUser = await User.create({
+            username,
+            name: name || username,
+            password,
+            role: 'USER',
+            balance: 1000,
+            holdings: { 'BTC': 0 },
+            avgBuyPrice: 0,
+            logs: []
+        });
+
+        console.log(`Registered user: ${username}`);
+        res.json({ success: true, user: { username: newUser.username, name: newUser.name, role: newUser.role } });
+    } catch (err) {
+        console.error('REGISTER ERROR:', err);
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
 // Socket Logic
 io.on('connection', (socket) => {
     console.log(`Socket Connected: ${socket.id}`);
 
+    // Emit market data immediately to anyone who connects (Guest or User)
+    socket.emit('market-snapshot', { symbol: 'BTC/USD', price: currentPrice });
+    socket.emit('leverage-update', LEVERAGE);
+
     socket.on('join', async (username) => {
+        if (!username) return; // Guests might not emit join
         socket.username = username;
 
         try {
             let user = await User.findOne({ username });
 
-            if (!user) {
-                // Creating temp/transient user or blocking? 
-                // Since we have auth, we generally expect user to exist.
-                // IF admin/login creates them. 
-                // We'll return if not found to enforce creation via Auth.
-                // EXCEPT for 'admin' - we must ensure admin exists on boot or here?
-                // Let's ensure admin exists if DB is empty
-                if (username === 'admin') {
-                    user = await User.create({
-                        username: 'admin',
-                        name: 'Administrator',
-                        password: 'admin123',
-                        role: 'ADMIN',
-                        balance: 0,
-                        holdings: { 'BTC': 0 }
-                    });
-                } else {
-                    return; // Don't create random users anymore
-                }
+            // Admin Auto-Create Logic (Keep existing)
+            if (!user && username === 'admin') {
+                user = await User.create({
+                    username: 'admin',
+                    name: 'Administrator',
+                    password: 'admin123',
+                    role: 'ADMIN',
+                    balance: 0,
+                    holdings: { 'BTC': 0 }
+                });
             }
 
-            socket.emit('market-snapshot', { symbol: 'BTC/USD', price: currentPrice });
-            socket.emit('portfolio-update', user);
-            socket.emit('leverage-update', LEVERAGE);
+            if (user) {
+                socket.emit('portfolio-update', user);
+            }
         } catch (err) {
             console.error("Join error:", err);
         }

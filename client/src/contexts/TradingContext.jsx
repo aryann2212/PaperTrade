@@ -21,7 +21,7 @@ export const TradingProvider = ({ children }) => {
     });
     const [leverage, setLeverage] = useState(1000);
 
-    // Restore Session
+    // Restore Session or Connect as Guest
     useEffect(() => {
         const storedUser = localStorage.getItem('userSession');
         if (storedUser) {
@@ -32,7 +32,10 @@ export const TradingProvider = ({ children }) => {
             } catch (e) {
                 console.error("Failed to parse stored session", e);
                 localStorage.removeItem('userSession');
+                connectSocket(null); // Guest
             }
+        } else {
+            connectSocket(null); // Guest
         }
     }, []); // Run only once on mount
 
@@ -53,11 +56,29 @@ export const TradingProvider = ({ children }) => {
         }
     };
 
+    const register = async (name, username, password) => {
+        try {
+            const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+            const res = await axios.post(`${apiBase}/api/register`, { name, username, password });
+            if (res.data.success) {
+                const userData = res.data.user;
+                setUser(userData);
+                localStorage.setItem('userSession', JSON.stringify(userData)); // Persist
+                connectSocket(userData.username);
+                return true;
+            }
+        } catch (err) {
+            console.error(err);
+            return false;
+        }
+    };
+
     const logout = () => {
         if (socket) socket.disconnect();
         setUser(null);
         localStorage.removeItem('userSession'); // Clear
         setPortfolio({ balance: 0, holdings: { 'BTC': 0 }, logs: [] });
+        connectSocket(null); // Reconnect as guest immediately
     };
 
     const connectSocket = (username) => {
@@ -68,7 +89,10 @@ export const TradingProvider = ({ children }) => {
         setSocket(newSocket);
 
         newSocket.on('connect', () => {
-            newSocket.emit('join', username);
+            if (username) {
+                newSocket.emit('join', username);
+            }
+            // else: Guest connection, server automatically emits market data
         });
 
         newSocket.on('price-update', (data) => {
@@ -100,7 +124,7 @@ export const TradingProvider = ({ children }) => {
     };
 
     const executeTrade = (type, amount, unit = 'USD') => {
-        if (socket) {
+        if (socket && user) {
             socket.emit('trade', { type, amount, unit });
         }
     };
@@ -117,10 +141,11 @@ export const TradingProvider = ({ children }) => {
     const value = {
         user,
         login,
+        register, // Exported
         logout,
         adminCreateUser,
         adminGetUsers,
-        adminUpdateBalance, // Exported
+        adminUpdateBalance,
 
         socket,
         currentPrice,

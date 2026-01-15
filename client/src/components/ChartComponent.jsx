@@ -36,6 +36,14 @@ export const ChartComponent = (props) => {
             timeScale: {
                 timeVisible: true,
                 secondsVisible: true,
+            },
+            handleScroll: {
+                mouseWheel: false,
+                pressedMouseMove: false,
+                vertTouchDrag: false,
+            },
+            handleScale: {
+                mouseWheel: false,
             }
         });
         chartRef.current = chart;

@@ -1,13 +1,16 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ChartComponent } from '../components/ChartComponent';
 import { useTrading } from '../contexts/TradingContext';
 import styles from './TradeDashboard.module.css';
 
 const TradeDashboard = () => {
-    const { currentPrice, lastCandle, portfolio, executeTrade } = useTrading();
+    const { currentPrice, lastCandle, portfolio, executeTrade, user } = useTrading();
+    const navigate = useNavigate(); // Add hook
     const [amount, setAmount] = useState('100');
     const [unit, setUnit] = useState('USD'); // 'USD' or 'BTC'
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isFullScreen, setIsFullScreen] = useState(false);
 
     const [activeTab, setActiveTab] = useState('BUY');
 
@@ -21,7 +24,7 @@ const TradeDashboard = () => {
 
         if (tab === 'BUY') {
             // Default: 50% of Cash Balance
-            const cash = portfolio.balance;
+            const cash = portfolio?.balance || 0; // Safe access
             const targetCash = cash * 0.5;
 
             if (currentUnit === 'USD') {
@@ -31,7 +34,7 @@ const TradeDashboard = () => {
             }
         } else {
             // Default: 100% of BTC Holdings (Sell All)
-            const btc = portfolio.holdings['BTC'] || 0;
+            const btc = portfolio?.holdings?.['BTC'] || 0; // Safe access
 
             if (btc <= 0) return '0';
 
@@ -75,6 +78,11 @@ const TradeDashboard = () => {
 
 
     const handleTrade = (type) => {
+        if (!user) {
+            navigate('/signup');
+            return;
+        }
+
         let val = parseFloat(amount);
         if (!val || val <= 0) {
             alert("Invalid amount");
@@ -123,11 +131,11 @@ const TradeDashboard = () => {
 
     // Calculate Daily Realized PnL
     const dailyRealizedPnL = useMemo(() => {
-        if (!portfolio.logs) return 0;
+        if (!portfolio?.logs) return 0;
         return portfolio.logs.reduce((acc, log) => {
             return acc + (log.pnl || 0);
         }, 0);
-    }, [portfolio.logs]);
+    }, [portfolio]);
 
     const pnlColor = dailyRealizedPnL >= 0 ? styles.profit : styles.loss;
     const pnlSign = dailyRealizedPnL >= 0 ? '+' : '';
@@ -141,6 +149,11 @@ const TradeDashboard = () => {
     };
 
     const handleMaxExecute = () => {
+        if (!user) {
+            navigate('/signup');
+            return;
+        }
+
         if (!currentPrice) return;
 
         let maxVal = 0;
@@ -178,7 +191,7 @@ const TradeDashboard = () => {
 
     const handleManualTrade = (type) => {
         handleTrade(type);
-        showToast("Trade Placed!");
+        if (user) showToast("Trade Placed!");
     };
 
     return (
@@ -206,15 +219,31 @@ const TradeDashboard = () => {
                         </div>
                         <button
                             className={styles.historyBtn}
-                            onClick={() => setIsSidebarOpen(true)}
+                            onClick={() => setIsFullScreen(!isFullScreen)}
                         >
-                            Trade History
+                            {isFullScreen ? 'Exit Full Screen' : 'Full Screen'}
                         </button>
+                        {user && (
+                            <button
+                                className={styles.historyBtn}
+                                onClick={() => setIsSidebarOpen(true)}
+                            >
+                                Trade History
+                            </button>
+                        )}
                     </div>
                 </header>
 
                 {/* Chart */}
-                <div className={`${styles.chartContainer} glass-panel`}>
+                <div className={`${styles.chartContainer} glass-panel ${isFullScreen ? styles.fullScreenChart : ''}`}>
+                    {isFullScreen && (
+                        <button
+                            className={styles.exitFullScreenBtn}
+                            onClick={() => setIsFullScreen(false)}
+                        >
+                            ✕ Exit Full Screen
+                        </button>
+                    )}
                     <ChartComponent
                         data={[]}
                         tick={lastCandle}
